@@ -61,9 +61,9 @@ commands:
             # Revert database changes
             if(( $SUCCESS==1 )); 
             then
-             cd ~/project/backend
-             npm install
-             npm run migration:revert
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
             fi
   
 jobs:
@@ -249,9 +249,9 @@ jobs:
             then
               curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
-     # Here's where you will add some code to rollback on failure      
       - destroy-environment
-      - revert-migrations
+      - revert-migrations    
+
 
 #   deploy-frontend:
 #     docker:
