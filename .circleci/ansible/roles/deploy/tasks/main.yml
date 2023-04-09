@@ -12,6 +12,7 @@
 - name: "Install node dependencies"
   shell: |
     cd ~/backend-app
+    sudo npm cache verify
     npm install
 
 - name: "Excute node app via PM2"
