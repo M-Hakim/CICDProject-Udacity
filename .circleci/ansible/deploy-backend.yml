@@ -1,6 +1,7 @@
 ---
 
 - name: "deployment play." 
+  debugger: always
   hosts: web
   user: ubuntu
   gather_facts: false
