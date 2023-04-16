@@ -75,7 +75,7 @@ commands:
             then
               cd ~/project/backend
               npm install
-              npm run migration:revert
+              npm run migrations:revert
             fi
   
 jobs:
@@ -366,16 +366,15 @@ jobs:
       - install_aws_cli
       - install_ansible
       - run:
-          name: Get backend url
+          name: Backend smoke test.
           command: |
+            # Get Backend URL
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text)
             export API_URL="http://${BACKEND_PUBLIC_IP}:3030"
-      - run:
-          name: Backend smoke test.
-          command: |
+            # Run the check
             if curl $API_URL/api/status | grep ok 
             then 
               exit 0
