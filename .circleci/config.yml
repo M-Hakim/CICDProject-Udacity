@@ -410,7 +410,7 @@ jobs:
             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
             --no-paginate --output text)
             echo "Old workflow ID: $OLD_WORKFLOW_ID"
-            curl https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "$OLD_WORKFLOW_ID" 
+            curl https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d $OLD_WORKFLOW_ID 
       - run:
           name: Update cloudfront distribution
           command: |
@@ -421,24 +421,39 @@ jobs:
       - destroy-environment
       - revert-migrations
 
-# cleanup:
-#     docker:
-#       # Docker image here
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Get old stack workflow id
-#           command: |
-#             # your code here
-#             export OldWorkflowID="the id here"
-#             export STACKS=[] #put the list of stacks here
-#       - run:
-#           name: Remove old stacks and files
-#           command: |
-#             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-#             then
-#               # your code here
-#             fi
+cleanup:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_aws_cli
+      - install_nodejs
+      - run:
+          name: Get old stack workflow id
+          command: |
+            # your code here
+            export OldWorkflowID="the id here"
+            export STACKS=[] #put the list of stacks here
+      - run:
+          name: Remove old stacks and files
+          command: |
+            # First: Get old stack workflow id
+            export OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/old_workflow_id)
+            echo "Old workflow ID: $OLD_WORKFLOW_ID"
+
+            # Then: Get stacks list
+            export STACKS=($(aws cloudformation list-stacks \
+            --query "StackSummaries[*].StackName" \
+            --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+            echo Stacks list: "${STACKS[@]}"
+
+            # Finally: Remove old stacks
+            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            then
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+            fi
 
   notify_on_success:
     docker:
@@ -488,5 +503,5 @@ workflows:
       - cloudfront-update:
           requires: [deploy-infrastructure]
           # requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - cleanup:
+          requires: [cloudfront-update]
