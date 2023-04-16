@@ -429,17 +429,11 @@ jobs:
         - install_aws_cli
         - install_nodejs
         - run:
-            name: Get old stack workflow id
-            command: |
-              # your code here
-              export OldWorkflowID="the id here"
-              export STACKS=[] #put the list of stacks here
-        - run:
-            name: Remove old stacks and files
+            name: Cleanup old stacks
             command: |
               # First: Get old stack workflow id
               export OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/old_workflow_id)
-              echo "Old workflow ID: $OLD_WORKFLOW_ID"
+              echo "Old workflow ID: $OldWorkflowID"
 
               # Then: Get stacks list
               export STACKS=($(aws cloudformation list-stacks \
