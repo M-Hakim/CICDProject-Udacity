@@ -507,8 +507,8 @@ workflows:
       - smoke-test:
           requires: [run-migrations]
           # requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
-          # requires: [deploy-infrastructure]
-          requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+      # - cloudfront-update:
+      #     # requires: [deploy-infrastructure]
+      #     requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
