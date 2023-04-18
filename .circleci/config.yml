@@ -79,6 +79,7 @@ commands:
               npm run migrations:revert > revert_migrations_dump.txt
               cat revert_migrations_dump.txt
             fi
+            cat revert_migrations_dump.txt
 
 jobs:
   build-frontend:
@@ -495,7 +496,8 @@ workflows:
       # - deploy-backend:
       #     # requires: [configure-infrastructure]
       #     requires: [run-migrations]
-      - smoke-test
+      - smoke-test:
+          requires: [run-migrations]
           # requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           # requires: [deploy-infrastructure]
