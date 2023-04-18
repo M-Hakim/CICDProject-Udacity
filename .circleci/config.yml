@@ -81,6 +81,7 @@ commands:
             # Revert database changes
             if [[ $SUCCESS==1 ]]
             then
+              cd ~/project/backend
               npm install
               npm run migrations:revert > revert_migrations_dump.txt
               cat revert_migrations_dump.txt
