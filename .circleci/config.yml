@@ -252,6 +252,7 @@ jobs:
       - destroy-environment
       # Here's where you will add some code to rollback on failure
 
+
   run-migrations:
     docker:
       - image: cimg/base:stable
