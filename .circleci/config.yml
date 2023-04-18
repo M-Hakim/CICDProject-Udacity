@@ -65,11 +65,17 @@ commands:
         type: string
         default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
-      - install_nodejs
+      # - install_nodejs
       - run:
           name: Revert migrations
           when: on_fail
           command: |
+            # First: we install lts version as base
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            # Then: we install n version manager to get to required version
+            sudo npm install --global n
+            sudo n 13.8.0
             SUCCESS=$(curl https://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.Workflow_ID >>)
             echo $SUCCESS
             node -v
