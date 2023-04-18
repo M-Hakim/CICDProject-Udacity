@@ -8,7 +8,7 @@ http://udapeople-3a1f49d.s3-website-us-east-1.amazonaws.com
 http://d21cfct9bisdat.cloudfront.net
 
 [URL04] Backend server
-http://ec2-54-210-254-206.compute-1.amazonaws.com:3030/api/status
+http://ec2-50-16-63-146.compute-1.amazonaws.com:3030/api/status
 
 [URL05] Prometheus server
-http://ec2-3-95-138-135.compute-1.amazonaws.com:9090
+http://ec2-44-201-192-229.compute-1.amazonaws.com:9090
